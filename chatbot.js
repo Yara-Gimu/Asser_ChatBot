@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function () {
     modeBtn.addEventListener('click', toggleDarkMode);
 
     setTimeout(() => {
-        addBotMessage(getTranslation('welcome_message'));
+        addBotMessage(getTranslation('welcome_message'), false);
         setTimeout(showLanguageOptions, 1000);
     }, 500);
 });
@@ -64,7 +64,6 @@ function addBotMessage(text, showTyping = true) {
     messageDiv.classList.add('message', 'bot-message');
 
     if (showTyping) {
-        // إضافة مؤشر الكتابة أولاً
         const typingIndicator = document.createElement('div');
         typingIndicator.classList.add('typing-indicator');
         typingIndicator.innerHTML = '<span></span><span></span><span></span>';
@@ -72,7 +71,6 @@ function addBotMessage(text, showTyping = true) {
         chatMessages.appendChild(messageDiv);
         chatMessages.scrollTop = chatMessages.scrollHeight;
 
-        // بعد تأخير محاكاة للكتابة، نعرض الرسالة الفعلية
         setTimeout(() => {
             messageDiv.removeChild(typingIndicator);
             messageDiv.innerHTML = text.replace(/\n/g, '<br>');
@@ -83,9 +81,8 @@ function addBotMessage(text, showTyping = true) {
                 message: text,
                 timestamp: new Date().toISOString()
             });
-        }, 1500 + (Math.random() * 1000)); // تأخير عشوائي بين 1.5 إلى 2.5 ثانية
+        }, 1500 + (Math.random() * 1000));
     } else {
-        // إذا لم نرد عرض مؤشر الكتابة (مثل الرسائل الفورية)
         messageDiv.innerHTML = text.replace(/\n/g, '<br>');
         chatMessages.appendChild(messageDiv);
         chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -97,7 +94,6 @@ function addBotMessage(text, showTyping = true) {
         });
     }
 }
-
 
 function showLanguageOptions() {
     const languages = [
@@ -123,7 +119,7 @@ function showLanguageOptions() {
 
 function selectLanguage(code) {
     currentLanguage = code;
-addBotMessage(getTranslation('language_set', { language: getLanguageLabel(code) }), false);
+    addBotMessage(getTranslation('language_set', { language: getLanguageLabel(code) }), false);
     userInput.placeholder = getTranslation('landmark_prompt');
     userInput.disabled = false;
     sendBtn.disabled = false;
@@ -194,6 +190,16 @@ function displayLandmarkInfo(landmark) {
 
     addBotMessage(`${getTranslation('landmark_info')}: ${landmark.name[currentLanguage]}`);
     addBotMessage(landmark.description[currentLanguage]);
+    
+    // إنشاء وإضافة قسم الصوت
+    const audioSection = createAudioSection(landmark.id);
+    chatMessages.appendChild(audioSection);
+    
+    // إنشاء وإضافة قسم الذاكرة
+    const memorySection = createMemoryWallSection(landmark.id);
+    chatMessages.appendChild(memorySection);
+    
+    chatMessages.scrollTop = chatMessages.scrollHeight;
 
     setTimeout(() => {
         addBotMessage(getTranslation('recommendation_prompt'));
@@ -204,13 +210,173 @@ function displayLandmarkInfo(landmark) {
     }, 1100);
 }
 
+function createAudioSection(landmarkId) {
+    const section = document.createElement('div');
+    section.className = 'audio-section';
+    
+    const landmark = window.landmarksData.landmarks.find(l => l.id === landmarkId);
+    const landmarkName = landmark ? landmark.name[currentLanguage] || landmark.name.ar : '';
+    
+    const title = document.createElement('h3');
+    title.id = 'audio-title';
+    title.textContent = `🎧 ${getTranslation('audio_story_title')}: ${landmarkName}`;
+    
+    const audio = document.createElement('audio');
+    audio.controls = true;
+    audio.src = `assets/audio/${landmarkId}.mp3`;
+    
+    const subtitle = document.createElement('p');
+    subtitle.className = 'story-subtitle';
+    
+    const subtitles = {
+        'rijal-almaa': {
+            ar: 'في هذا الموقع عاش أهل رجال ألمع قصصاً من البطولة والفن...',
+            en: 'In this location, the people of Rijal Almaa lived stories of heroism and art...'
+        },
+        'al-soudah': {
+            ar: 'جبال السودة تخبئ بين ضبابها حكايات الرعاة والمسافرين...',
+            en: 'The Soudah mountains hide in their mist tales of shepherds and wanderers...'
+        }
+    };
+    
+    subtitle.textContent = subtitles[landmarkId]?.[currentLanguage] || '';
+    
+    section.appendChild(title);
+    section.appendChild(audio);
+    section.appendChild(subtitle);
+    
+    return section;
+}
+
+function createMemoryWallSection(landmarkId) {
+    const section = document.createElement('div');
+    section.className = 'memory-wall-section';
+    section.dataset.landmarkId = landmarkId;
+    
+    const title = document.createElement('h3');
+    title.id = 'memory-wall-title';
+    title.textContent = getTranslation('memory_wall_title');
+    
+    const gallery = document.createElement('div');
+    gallery.className = 'gallery-grid';
+    gallery.id = 'photoGallery';
+    
+    const uploadSection = document.createElement('div');
+    uploadSection.className = 'upload-section';
+    
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.id = 'photoUpload';
+    fileInput.accept = 'image/*';
+    
+    const nameInput = document.createElement('input');
+    nameInput.type = 'text';
+    nameInput.id = 'visitorName';
+    nameInput.placeholder = getTranslation('name_placeholder');
+    
+    const uploadBtn = document.createElement('button');
+    uploadBtn.textContent = getTranslation('share_moment');
+    uploadBtn.onclick = uploadPhoto;
+    
+    uploadSection.appendChild(fileInput);
+    uploadSection.appendChild(nameInput);
+    uploadSection.appendChild(uploadBtn);
+    
+    section.appendChild(title);
+    section.appendChild(gallery);
+    section.appendChild(uploadSection);
+    
+    loadSavedPhotos(landmarkId, gallery);
+    
+    return section;
+}
+
+function loadSavedPhotos(landmarkId, gallery) {
+    const stored = JSON.parse(localStorage.getItem(`photos-${landmarkId}`)) || [];
+    
+    stored.forEach(item => {
+        const wrapper = document.createElement('div');
+        wrapper.style.display = 'flex';
+        wrapper.style.flexDirection = 'column';
+        wrapper.style.alignItems = 'center';
+        
+        const img = document.createElement('img');
+        img.src = typeof item === 'string' ? item : item.src;
+        img.style.width = '100px';
+        img.style.height = '100px';
+        img.style.objectFit = 'cover';
+        img.style.borderRadius = '8px';
+        
+        const caption = document.createElement('span');
+        caption.textContent = item.name || getTranslation('anonymous_visitor');
+        caption.style.marginTop = '6px';
+        caption.style.fontSize = '0.9rem';
+        caption.style.color = '#555';
+        
+        wrapper.appendChild(img);
+        wrapper.appendChild(caption);
+        gallery.appendChild(wrapper);
+    });
+}
+
+function uploadPhoto() {
+    const input = document.getElementById('photoUpload');
+    const nameInput = document.getElementById('visitorName');
+    const wall = document.querySelector('.memory-wall-section');
+    
+    if (!wall || !input.files.length) {
+        alert(getTranslation('select_photo_first'));
+        return;
+    }
+
+    const landmarkId = wall.dataset.landmarkId;
+    const gallery = document.getElementById('photoGallery');
+    const visitorName = nameInput.value.trim() || getTranslation('anonymous_visitor');
+
+    const file = input.files[0];
+    const reader = new FileReader();
+    reader.onload = function (e) {
+        const src = e.target.result;
+
+        const wrapper = document.createElement('div');
+        wrapper.style.display = 'flex';
+        wrapper.style.flexDirection = 'column';
+        wrapper.style.alignItems = 'center';
+
+        const img = document.createElement('img');
+        img.src = src;
+        img.style.width = '100px';
+        img.style.height = '100px';
+        img.style.objectFit = 'cover';
+        img.style.borderRadius = '8px';
+
+        const caption = document.createElement('span');
+        caption.textContent = visitorName;
+        caption.style.marginTop = '6px';
+        caption.style.fontSize = '0.9rem';
+        caption.style.color = '#555';
+
+        wrapper.appendChild(img);
+        wrapper.appendChild(caption);
+        gallery.appendChild(wrapper);
+
+        const stored = JSON.parse(localStorage.getItem(`photos-${landmarkId}`)) || [];
+        stored.push({ src, name: visitorName });
+        localStorage.setItem(`photos-${landmarkId}`, JSON.stringify(stored));
+    };
+
+    reader.readAsDataURL(file);
+    input.value = '';
+    nameInput.value = '';
+}
+
 function updateLandmarkStats(landmarkId) {
     const landmark = window.landmarksData.landmarks.find(l => l.id === landmarkId);
     if (landmark) {
-        landmark.visits++;
-        landmark.interactions++;
-        window.landmarksData.stats.totalVisits++;
-        window.landmarksData.stats.languages[currentLanguage]++;
+        landmark.visits = (landmark.visits || 0) + 1;
+        landmark.interactions = (landmark.interactions || 0) + 1;
+        window.landmarksData.stats.totalVisits = (window.landmarksData.stats.totalVisits || 0) + 1;
+        window.landmarksData.stats.languages[currentLanguage] = (window.landmarksData.stats.languages[currentLanguage] || 0) + 1;
     }
 }
 
@@ -227,15 +393,13 @@ function showRecommendations() {
         const landmark = window.landmarksData.landmarks.find(l => l.id === id);
         if (landmark) {
             const name = landmark.name[currentLanguage] || landmark.name.ar;
-            const mapUrl = landmark.location?.google_maps_url || '🔗 الرابط غير متوفر';
+            const mapUrl = landmark.location?.google_maps_url || getTranslation('map_not_available');
             msg += `• ${name}\n🔗 ${mapUrl}\n\n`;
         }
     });
 
     addBotMessage(msg.trim());
 }
-
-
 
 function generateAIResponse(message) {
     if (message.toLowerCase().includes(getTranslation('recommendation_keyword').toLowerCase())) {
@@ -267,11 +431,11 @@ function toggleDarkMode() {
 function getTranslation(key, params = {}) {
     const translations = {
         'welcome_message': {
-            'ar': 'مرحباً بكم في الدليل السياحي الذكي لمنطقة عسير!',
-            'en': 'Welcome to the Asir region smart tour guide!',
-            'fr': 'Bienvenue dans le guide touristique intelligent de la région d\'Asir!',
-            'es': '¡Bienvenido al guía turístico inteligente de la región de Asir!'
-        },
+            'ar': 'أهلاً بك في رِواي<br>كل معلم في عسير يحمل قصة...<br> رِواي بانتظارك ليحكيها.',
+            'en': 'Welcome to Rawi<br>Every landmark in Asir holds a story...<br> Rawi awaits to tell it.',
+            'fr': 'Bienvenue chez Rawi<br>Chaque site d\'Asir a une histoire...<br> Rawi attend pour la raconter.',
+            'es': 'Bienvenido a Rawi<br>Cada lugar en Asir tiene una historia...<br> Rawi espera para contarla.'
+              },
         'language_set': {
             'ar': `تم تعيين اللغة إلى ${params.language}`,
             'en': `Language set to ${params.language}`,
@@ -279,10 +443,10 @@ function getTranslation(key, params = {}) {
             'es': `Idioma establecido en ${params.language}`
         },
         'landmark_prompt': {
-            'ar': 'من فضلك أدخل رقم المعلم أو اسمه...',
-            'en': 'Please enter the landmark number or name...',
-            'fr': 'Veuillez entrer le numéro ou le nom du site...',
-            'es': 'Por favor ingrese el número o el nombre del sitio...'
+            'ar': 'من فضلك أدخل رقم المعلم الذي بجوارك، مثلاً: 001',
+            'en': 'Please enter the number of the landmark next to you, e.g., 001',
+            'fr': 'Veuillez entrer le numéro du site à côté de vous, par ex. : 001',
+            'es': 'Por favor ingrese el número del sitio junto a usted, p. ej.: 001'
         },
         'landmark_info': {
             'ar': 'معلومات عن المعلم',
@@ -337,8 +501,50 @@ function getTranslation(key, params = {}) {
             'en': 'Error loading data.',
             'fr': 'Erreur de chargement des données.',
             'es': 'Error al cargar los datos.'
+        },
+        'audio_story_title': {
+            'ar': 'استمع إلى قصة معلم',
+            'en': 'Listen to the Landmark Story',
+            'fr': 'Écoutez l\'histoire du site',
+            'es': 'Escucha la historia del sitio'
+        },
+        'memory_wall_title': {
+            'ar': '📸 لحظات الزوار (شاركنا صورتك وشاهد لحظات الآخرين)',
+            'en': '📸 Visitor Moments (Share your photo and see others)',
+            'fr': '📸 Moments des visiteurs (partagez votre photo)',
+            'es': '📸 Momentos de los visitantes (comparte tu photo)'
+        },
+        'name_placeholder': {
+            'ar': 'اكتب اسمك هنا (اختياري)',
+            'en': 'Enter your name (optional)',
+            'fr': 'Entrez votre nom (facultatif)',
+            'es': 'Ingresa tu nombre (opcional)'
+        },
+        'share_moment': {
+            'ar': 'شارك لحظتك',
+            'en': 'Share your moment',
+            'fr': 'Partagez votre moment',
+            'es': 'Comparte tu momento'
+        },
+        'anonymous_visitor': {
+            'ar': 'زائر مجهول',
+            'en': 'Anonymous visitor',
+            'fr': 'Visiteur anonyme',
+            'es': 'Visitante anónimo'
+        },
+        'select_photo_first': {
+            'ar': 'الرجاء اختيار صورة أولاً.',
+            'en': 'Please select a photo first.',
+            'fr': 'Veuillez d\'abord sélectionner une photo.',
+            'es': 'Por favor selecciona una foto primero.'
+        },
+        'map_not_available': {
+            'ar': '🔗 الرابط غير متوفر',
+            'en': '🔗 Link not available',
+            'fr': '🔗 Lien non disponible',
+            'es': '🔗 Enlace no disponible'
         }
     };
 
-    return translations[key][currentLanguage] || translations[key]['en'] || key;
+    return translations[key][currentLanguage] || translations[key]['ar'] || key;
 }
