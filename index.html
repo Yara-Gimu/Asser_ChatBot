@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>الدليل السياحي الذكي - عسير</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body class="day-mode">
+    <div class="container">
+
+        <!-- حاوية أزرار اختيار اللغة خارج المحادثة -->
+        <div id="languageSelector" class="language-buttons"></div>
+
+        <div class="chat-container">
+                    <header>
+            <img src="logo.png" alt="شعار عسير" class="logo" />
+            <h1>سحر الأبعاد العسيرية</h1>
+            <div class="mode-toggle">
+                <button id="modeBtn" aria-label="تبديل الوضع الليلي">الوضع الليلي</button>
+            </div>
+        </header>
+            <div class="chat-messages" id="chatMessages">
+                <!-- الرسائل تظهر هنا -->
+            </div>
+
+            <div class="chat-input">
+                <input type="text" id="userInput" placeholder="اختر اللغة أولاً..." disabled aria-label="حقل إدخال المستخدم" />
+                <button id="sendBtn" disabled aria-label="إرسال الرسالة">إرسال</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="chatbot.js"></script>
+    <script src="ai.js"></script>
+    <script>
+      // تبديل الوضع الليلي / النهاري (مع الترجمة)
+      const modeBtn = document.getElementById('modeBtn');
+
+      modeBtn.addEventListener('click', () => {
+        document.body.classList.toggle('night-mode');
+        document.body.classList.toggle('day-mode');
+
+        modeBtn.textContent = document.body.classList.contains('night-mode')
+          ? 'الوضع النهاري'
+          : 'الوضع الليلي';
+      });
+    </script>
+</body>
+</html>
