@@ -1,365 +1,561 @@
-/* --- ألوان مستوحاة من التراث العسيري بألوان مريحة --- */
-:root {
-  --asir-primary: #3a5a40;
-  --asir-secondary: #a58340;
-  --asir-light-bg: #f9f5ec;
-  --asir-dark-bg: #1e2d20;
-  --asir-text-dark: #2d3a2b;
-  --asir-text-light: #eae6dc;
-  --asir-border-light: #d1cbb3;
-  --asir-border-dark: #4a5b45;
-  --asir-button-hover: #7d6529;
-  --shadow-light: rgba(0,0,0,0.15);
-  --shadow-dark: rgba(0,0,0,0.6);
-}
 
-/* إعدادات عامة */
-body {
-  font-family: 'Tajawal', Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: var(--asir-light-bg);
-  color: var(--asir-text-dark);
-  direction: rtl;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  transition: background-color 0.4s ease, color 0.4s ease;
-}
+        /* --- ألوان مستوحاة من التراث العسيري بألوان مريحة --- */
+        :root {
+          --asir-primary: #3a5a40;
+          --asir-secondary: #a58340;
+          --asir-light-bg: #f9f5ec;
+          --asir-dark-bg: #1e2d20;
+          --asir-text-dark: #2d3a2b;
+          --asir-text-light: #eae6dc;
+          --asir-border-light: #d1cbb3;
+          --asir-border-dark: #4a5b45;
+          --asir-button-hover: #7d6529;
+          --shadow-light: rgba(0,0,0,0.15);
+          --shadow-dark: rgba(0,0,0,0.6);
+        }
 
-body.night-mode {
-  background-color: var(--asir-dark-bg);
-  color: var(--asir-text-light);
-}
+        /* إعدادات عامة */
+        body {
+          font-family: 'Tajawal', Arial, sans-serif;
+          margin: 0;
+          padding: 0;
+          background-color: var(--asir-light-bg);
+          color: var(--asir-text-dark);
+          direction: rtl;
+          min-height: 100vh;
+          display: flex;
+          flex-direction: column;
+          transition: background-color 0.4s ease, color 0.4s ease;
+          -webkit-text-size-adjust: 100%;
+          text-size-adjust: 100%;
+        }
 
-/* الحاوية الأساسية */
-.container {
-  max-width: 800px;
-  margin: 20px auto 40px;
-  padding: 0 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-}
+        body.night-mode {
+          background-color: var(--asir-dark-bg);
+          color: var(--asir-text-light);
+        }
 
-/* ✅ حاوية المحادثة + الهيدر داخلها ككتلة واحدة */
-.chat-container {
-  background-color: white;
-  border-radius: 12px;
-  box-shadow: 0 6px 15px var(--shadow-light);
-  display: flex;
-  flex-direction: column;
-  height: 70vh;
-  overflow: hidden; /* مهم لقص الحواف */
-  transition: background-color 0.4s ease;
-}
+        /* الحاوية الأساسية */
+        .container {
+          max-width: 800px;
+          margin: 20px auto 40px;
+          padding: 0 20px;
+          display: flex;
+          flex-direction: column;
+          gap: 0;
+        }
 
-body.night-mode .chat-container {
-  background-color: #2c3a2d;
-  box-shadow: 0 6px 15px var(--shadow-dark);
-}
+        /* ✅ حاوية المحادثة + الهيدر داخلها ككتلة واحدة */
+        .chat-container {
+          background-color: white;
+          border-radius: 12px;
+          box-shadow: 0 6px 15px var(--shadow-light);
+          display: flex;
+          flex-direction: column;
+          height: 70vh;
+          overflow: hidden; /* مهم لقص الحواف */
+          transition: background-color 0.4s ease;
+        }
 
-/* ✅ الهيدر الآن داخل chat-container */
-header {
-  background-color: var(--asir-primary);
-  color: var(--asir-text-light);
-  padding: 15px 25px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-radius: 12px 12px 0 0;
-  margin: 0;
-  box-shadow: none;
-}
+        body.night-mode .chat-container {
+          background-color: #2c3a2d;
+          box-shadow: 0 6px 15px var(--shadow-dark);
+        }
 
-body.night-mode header {
-  background-color: #2f4531;
-}
+        /* ✅ الهيدر الآن داخل chat-container */
+        header {
+          background-color: var(--asir-primary);
+          color: var(--asir-text-light);
+          padding: 15px 25px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          border-radius: 12px 12px 0 0;
+          margin: 0;
+          box-shadow: none;
+        }
 
-/* الشعار */
-.logo {
-  width: 60px;
-  height: auto;
-  user-select: none;
-}
+        body.night-mode header {
+          background-color: #2f4531;
+        }
 
-/* العنوان */
-header h1 {
-  flex-grow: 1;
-  font-size: 1.8rem;
-  font-weight: 700;
-  margin: 0 20px;
-  user-select: none;
-  white-space: nowrap;
-}
+        /* الشعار */
+        .logo {
+          width: 60px;
+          height: auto;
+          user-select: none;
+        }
 
-/* زر تبديل الوضع */
-.mode-toggle button {
-  background-color: var(--asir-secondary);
-  border: none;
-  padding: 10px 18px;
-  border-radius: 25px;
-  cursor: pointer;
-  font-weight: 700;
-  color: var(--asir-text-dark);
-  font-family: 'Tajawal', sans-serif;
-  transition: background-color 0.3s ease, color 0.3s ease;
-  user-select: none;
-}
+        /* العنوان */
+        header h1 {
+          flex-grow: 1;
+          font-size: 1.8rem;
+          font-weight: 700;
+          margin: 0 20px;
+          user-select: none;
+          white-space: nowrap;
+        }
 
-.mode-toggle button:hover {
-  background-color: var(--asir-button-hover);
-  color: white;
-}
+        /* زر تبديل الوضع */
+        .mode-toggle button {
+          background-color: var(--asir-secondary);
+          border: none;
+          padding: 10px 18px;
+          border-radius: 25px;
+          cursor: pointer;
+          font-weight: 700;
+          color: var(--asir-text-dark);
+          font-family: 'Tajawal', sans-serif;
+          transition: background-color 0.3s ease, color 0.3s ease;
+          user-select: none;
+          -webkit-tap-highlight-color: transparent;
+          touch-action: manipulation;
+        }
 
-body.night-mode .mode-toggle button {
-  color: var(--asir-dark-bg);
-}
+        .mode-toggle button:hover {
+          background-color: var(--asir-button-hover);
+          color: white;
+        }
 
-/* حاوية أزرار اللغة */
-.language-buttons {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin: 15px 0;
-}
+        body.night-mode .mode-toggle button {
+          color: var(--asir-dark-bg);
+        }
 
-.language-buttons button {
-  background-color: var(--asir-secondary);
-  border: none;
-  padding: 8px 16px;
-  border-radius: 20px;
-  cursor: pointer;
-  font-weight: 600;
-  color: var(--asir-text-dark);
-  transition: background-color 0.3s ease;
-  font-family: 'Tajawal', sans-serif;
-  user-select: none;
-}
+        /* حاوية أزرار اللغة */
+        .language-buttons {
+          display: flex;
+          gap: 10px;
+          flex-wrap: wrap;
+          justify-content: center;
+          margin: 15px 0;
+        }
 
-.language-buttons button:hover {
-  background-color: var(--asir-button-hover);
-  color: white;
-}
+        .language-buttons button {
+          background-color: var(--asir-secondary);
+          border: none;
+          padding: 8px 16px;
+          border-radius: 20px;
+          cursor: pointer;
+          font-weight: 600;
+          color: var(--asir-text-dark);
+          transition: background-color 0.3s ease;
+          font-family: 'Tajawal', sans-serif;
+          user-select: none;
+          -webkit-tap-highlight-color: transparent;
+          touch-action: manipulation;
+        }
 
-.language-buttons button.active {
-  background-color: var(--asir-primary);
-  color: var(--asir-text-light);
-  cursor: default;
-}
+        .language-buttons button:hover {
+          background-color: var(--asir-button-hover);
+          color: white;
+        }
 
-/* ✅ صندوق الرسائل بدون حواف لأن الهيدر هو الأعلى */
-.chat-messages {
-  flex-grow: 1;
-  padding: 20px;
-  overflow-y: auto;
-  background-color: #f4efe4;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  scroll-behavior: smooth;
-  border-radius: 0;
-}
+        .language-buttons button.active {
+          background-color: var(--asir-primary);
+          color: var(--asir-text-light);
+          cursor: default;
+        }
 
-body.night-mode .chat-messages {
-  background-color: #37513f;
-}
+        /* ✅ صندوق الرسائل بدون حواف لأن الهيدر هو الأعلى */
+        .chat-messages {
+          flex-grow: 1;
+          padding: 20px;
+          overflow-y: auto;
+          background-color: #f4efe4;
+          display: flex;
+          flex-direction: column;
+          gap: 15px;
+          scroll-behavior: smooth;
+          border-radius: 0;
+        }
 
-/* رسائل المستخدم والروبوت */
-.message {
-  max-width: 80%;
-  padding: 14px 22px;
-  border-radius: 25px;
-  line-height: 1.5;
-  word-wrap: break-word;
-  font-size: 1rem;
-  box-shadow: 0 3px 8px rgba(0,0,0,0.05);
-  position: relative;
-}
+        body.night-mode .chat-messages {
+          background-color: #37513f;
+        }
 
-.user-message {
-  background-color: var(--asir-primary);
-  color: var(--asir-text-light);
-  margin-left: auto;
-  border-bottom-right-radius: 5px;
-}
+        /* رسائل المستخدم والروبوت */
+        .message {
+          max-width: 80%;
+          padding: 14px 22px;
+          border-radius: 25px;
+          line-height: 1.5;
+          word-wrap: break-word;
+          font-size: 1rem;
+          box-shadow: 0 3px 8px rgba(0,0,0,0.05);
+          position: relative;
+        }
 
-.bot-message {
-  background-color: #fff;
-  border: 1px solid var(--asir-border-light);
-  margin-right: auto;
-  border-bottom-left-radius: 5px;
-  color: var(--asir-text-dark);
-}
+        .user-message {
+          background-color: var(--asir-primary);
+          color: var(--asir-text-light);
+          margin-left: auto;
+          border-bottom-right-radius: 5px;
+        }
 
-body.night-mode .bot-message {
-  background-color: #4a6c4b;
-  border-color: var(--asir-border-dark);
-  color: var(--asir-text-light);
-}
+        .bot-message {
+          background-color: #fff;
+          border: 1px solid var(--asir-border-light);
+          margin-right: auto;
+          border-bottom-left-radius: 5px;
+          color: var(--asir-text-dark);
+        }
 
-/* ذيول الرسائل */
-.message::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  width: 10px;
-  height: 10px;
-  background-color: inherit;
-}
+        body.night-mode .bot-message {
+          background-color: #4a6c4b;
+          border-color: var(--asir-border-dark);
+          color: var(--asir-text-light);
+        }
 
-.user-message::after {
-  right: -6px;
-  clip-path: polygon(100% 50%, 0 0, 0 100%);
-}
+        /* ذيول الرسائل */
+        .message::after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          width: 10px;
+          height: 10px;
+          background-color: inherit;
+        }
 
-.bot-message::after {
-  left: -6px;
-  clip-path: polygon(0 50%, 100% 0, 100% 100%);
-}
+        .user-message::after {
+          right: -6px;
+          clip-path: polygon(100% 50%, 0 0, 0 100%);
+        }
 
-/* ✅ صندوق الإدخال أسفل البطاقة */
-.chat-input {
-  display: flex;
-  gap: 12px;
-  padding: 15px 20px;
-  border-top: 1px solid var(--asir-border-light);
-  background-color: var(--asir-light-bg);
-  border-radius: 0 0 12px 12px;
-}
+        .bot-message::after {
+          left: -6px;
+          clip-path: polygon(0 50%, 100% 0, 100% 100%);
+        }
 
-body.night-mode .chat-input {
-  background-color: #2e4a33;
-  border-top-color: var(--asir-border-dark);
-}
+        /* ✅ صندوق الإدخال أسفل البطاقة */
+        .chat-input {
+          display: flex;
+          gap: 12px;
+          padding: 15px 20px;
+          border-top: 1px solid var(--asir-border-light);
+          background-color: var(--asir-light-bg);
+          border-radius: 0 0 12px 12px;
+        }
 
-.chat-input input {
-  flex-grow: 1;
-  padding: 14px 20px;
-  border-radius: 25px;
-  border: 1px solid var(--asir-border-light);
-  font-size: 1rem;
-  font-family: 'Tajawal', Arial, sans-serif;
-  background-color: white;
-  color: var(--asir-text-dark);
-  transition: background-color 0.3s ease, border-color 0.3s ease;
-}
+        body.night-mode .chat-input {
+          background-color: #2e4a33;
+          border-top-color: var(--asir-border-dark);
+        }
 
-.chat-input input::placeholder {
-  color: #999;
-}
+        .chat-input input {
+          flex-grow: 1;
+          padding: 14px 20px;
+          border-radius: 25px;
+          border: 1px solid var(--asir-border-light);
+          font-size: 1rem;
+          font-family: 'Tajawal', Arial, sans-serif;
+          background-color: white;
+          color: var(--asir-text-dark);
+          transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
 
-body.night-mode .chat-input input {
-  background-color: #3b563e;
-  border-color: var(--asir-border-dark);
-  color: var(--asir-text-light);
-}
+        .chat-input input::placeholder {
+          color: #999;
+        }
 
-body.night-mode .chat-input input::placeholder {
-  color: #ccc;
-}
+        body.night-mode .chat-input input {
+          background-color: #3b563e;
+          border-color: var(--asir-border-dark);
+          color: var(--asir-text-light);
+        }
 
-.chat-input input:focus {
-  border-color: var(--asir-primary);
-  box-shadow: 0 0 5px var(--asir-primary);
-  outline: none;
-}
+        body.night-mode .chat-input input::placeholder {
+          color: #ccc;
+        }
 
-.chat-input button {
-  background-color: var(--asir-secondary);
-  color: var(--asir-text-dark);
-  border: none;
-  border-radius: 25px;
-  padding: 14px 28px;
-  cursor: pointer;
-  font-weight: 700;
-  font-family: 'Tajawal', Arial, sans-serif;
-  transition: background-color 0.3s ease;
-  user-select: none;
-}
+        .chat-input input:focus {
+          border-color: var(--asir-primary);
+          box-shadow: 0 0 5px var(--asir-primary);
+          outline: none;
+        }
 
-.chat-input button:hover:not(:disabled) {
-  background-color: var(--asir-button-hover);
-  color: white;
-}
+        .chat-input button {
+          background-color: var(--asir-secondary);
+          color: var(--asir-text-dark);
+          border: none;
+          border-radius: 25px;
+          padding: 14px 28px;
+          cursor: pointer;
+          font-weight: 700;
+          font-family: 'Tajawal', Arial, sans-serif;
+          transition: background-color 0.3s ease;
+          user-select: none;
+          -webkit-tap-highlight-color: transparent;
+          touch-action: manipulation;
+        }
 
-.chat-input button:disabled {
-  background-color: #999;
-  cursor: not-allowed;
-  color: #666;
-}
+        .chat-input button:hover:not(:disabled) {
+          background-color: var(--asir-button-hover);
+          color: white;
+        }
 
-/* تصميم متجاوب */
-@media (max-width: 600px) {
-  .container {
-    margin: 15px 10px 30px;
-    padding: 0 10px;
-  }
+        .chat-input button:disabled {
+          background-color: #999;
+          cursor: not-allowed;
+          color: #666;
+        }
 
-  header {
-    flex-direction: column;
-    gap: 10px;
-  }
+        /* مؤشر الكتابة */
+        .typing-indicator {
+          display: inline-block;
+          margin-right: 10px;
+        }
 
-  header h1 {
-    margin: 0;
-    font-size: 1.5rem;
-    text-align: center;
-  }
+        .typing-indicator span {
+          display: inline-block;
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+          background-color: var(--asir-text-dark);
+          margin: 0 2px;
+          opacity: 0.4;
+          animation: typing-bounce 1.4s infinite ease-in-out;
+        }
 
-  .chat-container {
-    height: 60vh;
-  }
+        .typing-indicator span:nth-child(1) {
+          animation-delay: 0s;
+        }
 
-  .chat-input input {
-    padding: 12px 15px;
-  }
+        .typing-indicator span:nth-child(2) {
+          animation-delay: 0.2s;
+        }
 
-  .chat-input button {
-    padding: 12px 20px;
-  }
-}
-/* مؤشر الكتابة */
-.typing-indicator {
-  display: inline-block;
-  margin-right: 10px;
-}
+        .typing-indicator span:nth-child(3) {
+          animation-delay: 0.4s;
+        }
 
-.typing-indicator span {
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background-color: var(--asir-text-dark);
-  margin: 0 2px;
-  opacity: 0.4;
-  animation: typing-bounce 1.4s infinite ease-in-out;
-}
+        @keyframes typing-bounce {
+          0%, 60%, 100% {
+            transform: translateY(0);
+            opacity: 0.4;
+          }
+          30% {
+            transform: translateY(-5px);
+            opacity: 1;
+          }
+        }
 
-.typing-indicator span:nth-child(1) {
-  animation-delay: 0s;
-}
+        body.night-mode .typing-indicator span {
+          background-color: var(--asir-text-light);
+        }
 
-.typing-indicator span:nth-child(2) {
-  animation-delay: 0.2s;
-}
+        .daily-audio, .memory-wall {
+          margin-top: 30px;
+          background-color: #fff;
+          padding: 20px;
+          border-radius: 12px;
+          box-shadow: 0 3px 10px var(--shadow-light);
+        }
 
-.typing-indicator span:nth-child(3) {
-  animation-delay: 0.4s;
-}
+        body.night-mode .daily-audio, body.night-mode .memory-wall {
+          background-color: #324c37;
+          color: var(--asir-text-light);
+        }
 
-@keyframes typing-bounce {
-  0%, 60%, 100% {
-    transform: translateY(0);
-    opacity: 0.4;
-  }
-  30% {
-    transform: translateY(-5px);
-    opacity: 1;
-  }
-}
+        .memory-wall h2, .daily-audio h2 {
+          margin-top: 0;
+        }
 
-body.night-mode .typing-indicator span {
-  background-color: var(--asir-text-light);
-}
+        .gallery-grid {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 10px;
+          margin-top: 15px;
+        }
+
+        .gallery-grid img {
+          width: 100px;
+          height: 100px;
+          object-fit: cover;
+          border-radius: 8px;
+          border: 2px solid var(--asir-border-light);
+        }
+
+        .upload-section {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+          margin-top: 10px;
+        }
+
+        #visitorName {
+          padding: 10px;
+          border-radius: 8px;
+          border: 1px solid var(--asir-border-light);
+          font-family: 'Tajawal', sans-serif;
+        }
+
+        .daily-audio, .memory-wall {
+          background-color: var(--asir-light-bg);
+          border: 2px solid var(--asir-secondary);
+          padding: 18px 22px;
+          border-radius: 16px;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+          margin-top: 30px;
+        }
+
+        body.night-mode .daily-audio, body.night-mode .memory-wall {
+          background-color: var(--asir-dark-bg);
+          border-color: var(--asir-border-dark);
+        }
+
+        .daily-audio h2, .memory-wall h2 {
+          font-size: 1.3rem;
+          color: var(--asir-primary);
+          font-weight: bold;
+          margin-bottom: 12px;
+        }
+
+        body.night-mode .daily-audio h2, body.night-mode .memory-wall h2 {
+          color: var(--asir-text-light);
+        }
+
+        /* تحسينات للجوال - إضافات وتعديلات */
+        @media (max-width: 768px) {
+          /* تعديل الهيدر ليكون أكثر إحكاما */
+          header {
+            padding: 12px 15px;
+          }
+          
+          .logo {
+            width: 50px;
+          }
+          
+          header h1 {
+            font-size: 1.4rem;
+            margin: 0 10px;
+          }
+          
+          /* تعديل أزرار اللغة */
+          .language-buttons {
+            gap: 6px;
+            margin: 10px 0;
+          }
+          
+          .language-buttons button {
+            padding: 6px 12px;
+            font-size: 0.85rem;
+          }
+          
+          /* تحسين حاوية المحادثة */
+          .chat-container {
+            height: 65vh;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px var(--shadow-light);
+          }
+          
+          /* تعديل حجم الرسائل */
+          .message {
+            max-width: 90%;
+            padding: 10px 16px;
+            font-size: 0.95rem;
+          }
+          
+          /* تحسين صندوق الإدخال */
+          .chat-input {
+            padding: 12px 15px;
+            flex-direction: column;
+            gap: 10px;
+          }
+          
+          .chat-input input {
+            padding: 12px 15px;
+            width: 100%;
+            box-sizing: border-box;
+          }
+          
+          .chat-input button {
+            padding: 12px;
+            width: 100%;
+          }
+          
+          /* تحسينات للأقسام الإضافية */
+          .daily-audio, .memory-wall {
+            padding: 15px;
+            margin-top: 20px;
+          }
+          
+          .gallery-grid {
+            justify-content: center;
+          }
+          
+          .gallery-grid img {
+            width: 80px;
+            height: 80px;
+          }
+          
+          /* تحسينات للوضع الليلي على الجوال */
+          body.night-mode .chat-input {
+            padding: 12px;
+          }
+          
+          body.night-mode .chat-container {
+            box-shadow: 0 4px 8px var(--shadow-dark);
+          }
+        }
+
+        /* تحسينات إضافية للشاشات الصغيرة جدا */
+        @media (max-width: 480px) {
+          .container {
+            margin: 10px 5px 20px;
+          }
+          
+          header h1 {
+            font-size: 1.2rem;
+          }
+          
+          .mode-toggle button {
+            padding: 8px 12px;
+            font-size: 0.8rem;
+          }
+          
+          .chat-container {
+            height: 60vh;
+          }
+          
+          .message {
+            max-width: 95%;
+            padding: 8px 12px;
+            font-size: 0.9rem;
+          }
+          
+          .daily-audio h2, .memory-wall h2 {
+            font-size: 1.1rem;
+          }
+          
+          #visitorName {
+            padding: 8px 10px;
+          }
+          
+          body {
+            font-size: 15px;
+          }
+          
+          .chat-input input, .chat-input button {
+            font-size: 0.9rem;
+          }
+        }
+
+        /* تحسينات للوضع الأفقي على الجوال */
+        @media (max-height: 500px) and (orientation: landscape) {
+          .chat-container {
+            height: 50vh;
+          }
+          
+          header {
+            padding: 8px 12px;
+          }
+          
+          .message {
+            padding: 6px 10px;
+            font-size: 0.85rem;
+          }
+          
+          .chat-input {
+            padding: 8px 10px;
+          }
+        }
